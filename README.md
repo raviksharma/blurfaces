@@ -30,6 +30,6 @@ The tool helps with reporting while protecting identity and privacy. There is no
 - uses https://ffmpeg.org/ for audio and video processing
 - tool is not perfect; should be used with other manual editing before final publish
 - next steps
-        - fix the command line user interface
-        - add a web user interface
-        - test video formats
+   - fix the command line user interface
+   - add a web user interface
+   - test video formats
