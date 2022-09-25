@@ -20,7 +20,7 @@ The tool helps with reporting while protecting identity and privacy. There is no
 
 ## Usage
 
-python3 blur_faces.py <file_name>
+`python3 blur_faces.py <file_name>`
 
 (expects file in the same location as script)
 
