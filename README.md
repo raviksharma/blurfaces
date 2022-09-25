@@ -1,4 +1,4 @@
 # blurfaces
-blue faces in videos
+blurs faces in video
 
-python3 blur_faces_v2.py <file_name>
+python3 blur_faces.py <file_name>
