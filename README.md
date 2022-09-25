@@ -32,4 +32,4 @@ The tool helps with reporting while protecting identity and privacy. There is no
 - next steps
    - fix the command line user interface
    - add a web user interface
-   - test video formats
+   - add more video formats
