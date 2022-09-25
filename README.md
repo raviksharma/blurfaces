@@ -1,8 +1,5 @@
 # blurfaces
 
-## Team Members
-https://github.com/raviksharma
-
 ## Tool Description
 
 Blurs faces in video.
