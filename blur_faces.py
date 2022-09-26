@@ -25,9 +25,7 @@ video_out = cv2.VideoWriter(
             out_video_file, cv2.VideoWriter_fourcc(*'mp4v'), fps, (width, height))
 
 face_locations = []
-process_this_frame = True
 
-i=0
 for i in trange(length+1):
     # Grab a single frame of video
     ret, frame = video_capture.read()
@@ -35,11 +33,7 @@ for i in trange(length+1):
         video_out.release()
         break
 
-    if process_this_frame:
-        new_face_locations = face_recognition.face_locations(frame)
-        if len(new_face_locations) >= len(face_locations): #TODO: do not ignore new face locations
-            face_locations=new_face_locations
-
+    face_locations = face_recognition.face_locations(frame)
     for (top, right, bottom, left) in face_locations:
 
         # Extract the region of the image that contains the face
@@ -53,12 +47,10 @@ for i in trange(length+1):
 
     video_out.write(frame)
 
-    process_this_frame = not process_this_frame
-
 video_capture.release()
 cv2.destroyAllWindows()
 
 stream = ffmpeg.input(out_video_file)
-stream = ffmpeg.output(stream, a1, 'audio_'+ out_video_file)
+stream = ffmpeg.output(stream, a1, 'audio_' + out_video_file)
 ffmpeg.run(stream)
 os.remove(out_video_file)
