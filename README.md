@@ -32,3 +32,5 @@ Blurs faces in video.
    - fix the command line user interface
    - add a web user interface
    - add more video formats
+   - smooth face_locations (fixes failure in detecting in odd frames)
+   - detect scene change and use it to reset face_locations[]
