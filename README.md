@@ -29,8 +29,7 @@ Blurs faces in video.
 - uses https://ffmpeg.org/ for audio and video processing
 - tool is not perfect; should be used with other manual editing before final publish
 - next steps
-   - fix the command line user interface
    - add a web user interface
-   - add more video formats
+   - test more video codecs and containers
    - smooth face_locations (fixes failure in detecting in odd frames)
    - detect scene change and use it to reset face_locations[]
