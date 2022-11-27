@@ -19,9 +19,7 @@ Blurs faces in video.
 
 ## Usage
 
-`python3 blur_faces.py <file_name>`
-
-(expects file in the same location as script)
+`python3 blur_faces.py <input_file>`
 
 ## Additional Information
 
