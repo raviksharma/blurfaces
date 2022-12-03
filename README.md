@@ -29,5 +29,5 @@ Blurs faces in video.
 - next steps
    - add a web user interface
    - write video using ffmpeg #https://kkroening.github.io/ffmpeg-python/#ffmpeg.run_async
-   - smooth face_locations (fixes failure in detecting in odd frames)
+   - smooth face_locations (fixes failure in detecting odd frames)
    - detect scene change and use it to reset face_locations[]
