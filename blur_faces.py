@@ -16,9 +16,12 @@ def decode_fourcc(cc):
 
 
 @click.command()
+@click.option('--model',
+              type=click.Choice(['hog', 'cnn'], case_sensitive=False))
 @click.argument('in_video_file', type=click.Path(exists=True))
-def blurfaces(in_video_file):
+def blurfaces(model, in_video_file):
     click.echo(click.format_filename(in_video_file))
+    print(f'{model=}')
 
     filename, file_extension = os.path.splitext(in_video_file)
     in_av_file = ffmpeg.input(in_video_file)
@@ -44,7 +47,7 @@ def blurfaces(in_video_file):
             video_out.release()
             break
 
-        face_locations = face_recognition.face_locations(frame)
+        face_locations = face_recognition.face_locations(frame, model=model)
         for (top, right, bottom, left) in face_locations:
             face_image = frame[top:bottom, left:right]
             blurred_face = cv2.GaussianBlur(face_image, (0, 0), 30)
@@ -57,7 +60,7 @@ def blurfaces(in_video_file):
     stream = ffmpeg.input(out_video_file)
     stream = ffmpeg.output(stream, a1, 'out' + file_extension)
     ffmpeg.run(stream)
-    os.remove(out_video_file)
+    #os.remove(out_video_file)
 
     return 0
 
