@@ -27,7 +27,5 @@ Blurs faces in video.
 - uses https://ffmpeg.org/ for audio and video processing
 - tool is not perfect; should be used with other manual editing before final publish
 - next steps
-   - add a web user interface
-   - write video using ffmpeg #https://kkroening.github.io/ffmpeg-python/#ffmpeg.run_async
    - smooth face_locations (fixes failure in detecting odd frames)
    - detect scene change and use it to reset face_locations[]
