@@ -11,6 +11,14 @@ def decode_fourcc(cc):
     return ''.join([chr((int(cc) >> 8 * i) & 0xFF) for i in range(4)])
 
 
+def has_audio(file_path):
+    streams = ffmpeg.probe(file_path)['streams']
+    for stream in streams:
+        if stream['codec_type'] == 'audio':
+            return True
+    return False
+
+
 @click.command()
 @click.option('--model',
               type=click.Choice(['hog', 'cnn'], case_sensitive=False))
@@ -20,8 +28,9 @@ def blurfaces(model, in_video_file):
     print(f'{model=}')
 
     _, file_extension = os.path.splitext(in_video_file)
+
     in_av_file = ffmpeg.input(in_video_file)
-    a1 = in_av_file.audio
+    a1 = in_av_file.audio if has_audio(in_video_file) else None
 
     video_capture = cv2.VideoCapture(in_video_file)
     width = int(video_capture.get(cv2.CAP_PROP_FRAME_WIDTH))
@@ -53,8 +62,9 @@ def blurfaces(model, in_video_file):
         video_capture.release()
         cv2.destroyAllWindows()
 
-        stream = ffmpeg.input(out_video_file.name)
-        stream = ffmpeg.output(stream, a1, 'out' + file_extension)
+        blurred_video_input = ffmpeg.input(out_video_file.name)
+        streams = [blurred_video_input, a1] if a1 else [blurred_video_input]
+        stream = ffmpeg.output(*streams, 'out' + file_extension).overwrite_output()
         ffmpeg.run(stream)
 
     return 0
