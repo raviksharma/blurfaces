@@ -4,6 +4,10 @@
 
 Blurs faces in video.
 
+input | output
+:-: | :-:
+<video src='https://user-images.githubusercontent.com/600723/212699288-73a89730-a92b-4136-a340-0e8739fc832d.mp4'/>|<video src='https://user-images.githubusercontent.com/600723/212761619-ddd63219-f4b1-4b7d-b890-1d66ae190fb0.mp4'/>
+
 
 ## Installation
 1. Make sure you have Python version 3.10.6 or greater installed
