@@ -22,10 +22,12 @@ def has_audio(file_path):
 @click.command()
 @click.option('--model',
               type=click.Choice(['hog', 'cnn'], case_sensitive=False))
+@click.option('--count', default=1, help='How many times to upsample the image looking for faces. Higher numbers find smaller faces.')
 @click.argument('in_video_file', type=click.Path(exists=True))
-def blurfaces(model, in_video_file):
+def blurfaces(model, count, in_video_file):
     click.echo(click.format_filename(in_video_file))
     print(f'{model=}')
+    print(f'{count=}')
 
     _, file_extension = os.path.splitext(in_video_file)
 
@@ -52,7 +54,7 @@ def blurfaces(model, in_video_file):
                 video_out.release()
                 break
 
-            face_locations = face_recognition.face_locations(frame, model=model)
+            face_locations = face_recognition.face_locations(frame, number_of_times_to_upsample=count, model=model)
             for (top, right, bottom, left) in face_locations:
                 face_image = frame[top:bottom, left:right]
                 blurred_face = cv2.GaussianBlur(face_image, (0, 0), 30)

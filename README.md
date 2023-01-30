@@ -29,3 +29,5 @@ Blurs faces in video.
 - next steps
    - smooth face_locations (fixes failure in detecting odd frames)
    - detect scene change and use it to reset face_locations[]
+   - choose blur type
+   - choose num_jitters
