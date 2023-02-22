@@ -1,5 +1,6 @@
 import os
 import click
+import numpy as np
 import tempfile
 import ffmpeg
 import face_recognition
@@ -20,13 +21,14 @@ def has_audio(file_path):
 
 
 @click.command()
-@click.option('--model',
-              type=click.Choice(['hog', 'cnn'], case_sensitive=False))
+@click.option('--model', default='hog', type=click.Choice(['hog', 'cnn'], case_sensitive=False))
+@click.option('--censor_type', default='gaussianblur', type=click.Choice(['gaussianblur', 'facemasking'], case_sensitive=False))
 @click.option('--count', default=1, help='How many times to upsample the image looking for faces. Higher numbers find smaller faces.')
 @click.argument('in_video_file', type=click.Path(exists=True))
-def blurfaces(model, count, in_video_file):
+def blurfaces(model, censor_type, count, in_video_file):
     click.echo(click.format_filename(in_video_file))
     print(f'{model=}')
+    print(f'{censor_type=}')
     print(f'{count=}')
 
     _, file_extension = os.path.splitext(in_video_file)
@@ -57,7 +59,10 @@ def blurfaces(model, count, in_video_file):
             face_locations = face_recognition.face_locations(frame, number_of_times_to_upsample=count, model=model)
             for (top, right, bottom, left) in face_locations:
                 face_image = frame[top:bottom, left:right]
-                blurred_face = cv2.GaussianBlur(face_image, (0, 0), 30)
+                if censor_type == 'gaussianblur':
+                    blurred_face = cv2.GaussianBlur(face_image, (0, 0), 30)
+                else:
+                    blurred_face = np.zeros((bottom-top, right-left, 3))
                 frame[top:bottom, left:right] = blurred_face
             video_out.write(frame)
 
