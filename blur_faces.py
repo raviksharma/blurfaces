@@ -22,7 +22,7 @@ def has_audio(file_path):
 
 @click.command()
 @click.option('--model', default='hog', type=click.Choice(['hog', 'cnn'], case_sensitive=False))
-@click.option('--censor_type', default='gaussianblur', type=click.Choice(['gaussianblur', 'facemasking'], case_sensitive=False))
+@click.option('--censor_type', default='gaussianblur', type=click.Choice(['gaussianblur', 'facemasking', 'pixelation'], case_sensitive=False))
 @click.option('--count', default=1, help='How many times to upsample the image looking for faces. Higher numbers find smaller faces.')
 @click.argument('in_video_file', type=click.Path(exists=True))
 def blurfaces(model, censor_type, count, in_video_file):
@@ -59,10 +59,15 @@ def blurfaces(model, censor_type, count, in_video_file):
             face_locations = face_recognition.face_locations(frame, number_of_times_to_upsample=count, model=model)
             for (top, right, bottom, left) in face_locations:
                 face_image = frame[top:bottom, left:right]
-                if censor_type == 'gaussianblur':
-                    blurred_face = cv2.GaussianBlur(face_image, (0, 0), 30)
-                else:
+                if censor_type == 'facemasking':
                     blurred_face = np.zeros((bottom-top, right-left, 3))
+                elif censor_type == 'pixelation':
+                    h, w = face_image.shape[:2]
+                    resized_image = cv2.resize(face_image, (8, 8), interpolation=cv2.INTER_AREA)
+                    blurred_face = cv2.resize(resized_image, (w, h), interpolation=cv2.INTER_AREA)
+                else:
+                    blurred_face = cv2.GaussianBlur(face_image, (0, 0), 30)
+
                 frame[top:bottom, left:right] = blurred_face
             video_out.write(frame)
 
