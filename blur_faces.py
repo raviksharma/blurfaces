@@ -31,6 +31,13 @@ def blurfaces(model, censor_type, count, in_video_file):
     print(f'{censor_type=}')
     print(f'{count=}')
 
+    ross1 = face_recognition.load_image_file('Ross_Geller.jpg')
+    try:
+        # expecting only 1 face in the image
+        ross1_enc = face_recognition.face_encodings(ross1)[0]
+    except IndexError:
+        print('face not found in image')
+
     _, file_extension = os.path.splitext(in_video_file)
 
     in_av_file = ffmpeg.input(in_video_file)
@@ -57,18 +64,14 @@ def blurfaces(model, censor_type, count, in_video_file):
                 break
 
             face_locations = face_recognition.face_locations(frame, number_of_times_to_upsample=count, model=model)
-            for (top, right, bottom, left) in face_locations:
-                face_image = frame[top:bottom, left:right]
-                if censor_type == 'facemasking':
+            face_image_encodings = face_recognition.face_encodings(frame, face_locations)
+            results = face_recognition.compare_faces(face_image_encodings, ross1_enc)
+            for found, face_location in zip(results, face_locations):
+                if found == True:
+                    top, right, bottom, left  = face_location
+                    face_image = frame[top:bottom, left:right]
                     blurred_face = np.zeros((bottom-top, right-left, 3))
-                elif censor_type == 'pixelation':
-                    h, w = face_image.shape[:2]
-                    resized_image = cv2.resize(face_image, (8, 8), interpolation=cv2.INTER_AREA)
-                    blurred_face = cv2.resize(resized_image, (w, h), interpolation=cv2.INTER_AREA)
-                else:
-                    blurred_face = cv2.GaussianBlur(face_image, (0, 0), 30)
-
-                frame[top:bottom, left:right] = blurred_face
+                    frame[top:bottom, left:right] = blurred_face
             video_out.write(frame)
 
         video_capture.release()
