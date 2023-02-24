@@ -51,10 +51,11 @@ def get_blurred_face(frame, censor_type, face_location):
 @click.option('--model', default='hog', type=click.Choice(['hog', 'cnn'], case_sensitive=False))
 @click.option('--censor-type', default='gaussianblur', type=click.Choice(['gaussianblur', 'facemasking', 'pixelation'], case_sensitive=False))
 @click.option('--count', default=1, help='How many times to upsample the image looking for faces. Higher numbers find smaller faces.')
-@click.argument('in_video_file', type=click.Path(exists=True))
-def blurfaces(mode, model, censor_type, count, in_video_file):
+@click.option('--in-face-file', type=str)
+@click.argument('in-video-file', type=click.Path(exists=True))
+def blurfaces(mode, model, censor_type, count, in_face_file, in_video_file):
     click.echo(click.format_filename(in_video_file))
-    print(f'{mode=}, {model=}, {censor_type=}, {count=}')
+    print(f'{mode=}, {model=}, {censor_type=}, {count=}, {in_face_file=}')
 
     _, file_extension = os.path.splitext(in_video_file)
 
@@ -71,12 +72,14 @@ def blurfaces(mode, model, censor_type, count, in_video_file):
 
         face_locations = []
         if mode == 'one':
-            ross1 = face_recognition.load_image_file('Ross_Geller.jpg')
             try:
+                face_to_blur = face_recognition.load_image_file(in_face_file)
                 # expecting only 1 face in the image
-                ross1_enc = face_recognition.face_encodings(ross1)[0]
+                face_to_blur_enc = face_recognition.face_encodings(face_to_blur)[0]
+            except FileNotFoundError:
+                exit(f'file not found {in_face_file=}.')
             except IndexError:
-                print('face not found in image')
+                exit(f'no face found in the image file {in_face_file=}.')
 
             for i in trange(length+1):
                 ret, frame = video_capture.read()
@@ -86,11 +89,14 @@ def blurfaces(mode, model, censor_type, count, in_video_file):
 
                 face_locations = face_recognition.face_locations(frame, number_of_times_to_upsample=count, model=model)
                 face_image_encodings = face_recognition.face_encodings(frame, face_locations)
-                results = face_recognition.compare_faces(face_image_encodings, ross1_enc)
+                results = face_recognition.compare_faces(face_image_encodings, face_to_blur_enc)
                 for found, face_location in zip(results, face_locations):
                     if found:
                         frame = get_blurred_face(frame, censor_type, face_location)
                 video_out.write(frame)
+
+        elif mode == 'allexcept':
+            exit('mode not supported.')
         else:
             exit('mode not supported.')
 
