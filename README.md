@@ -34,3 +34,5 @@ input | output
    - smooth face_locations (fixes failure in detecting odd frames)
    - detect scene change and use it to reset face_locations[]
    - choose num_jitters
+   - blur only one face
+   - blur all but one face
