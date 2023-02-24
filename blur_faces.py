@@ -30,6 +30,22 @@ def get_video_properties(video_capture):
     return width, height, length, fps, fourcc, codec
 
 
+def get_blurred_face(frame, censor_type, face_location):
+    top, right, bottom, left = face_location
+    if censor_type == 'facemasking':
+        blurred_face = np.zeros((bottom-top, right-left, 3))
+    elif censor_type == 'pixelation':
+        face_image = frame[top:bottom, left:right]
+        h, w = face_image.shape[:2]
+        resized_image = cv2.resize(face_image, (8, 8), interpolation=cv2.INTER_AREA)
+        blurred_face = cv2.resize(resized_image, (w, h), interpolation=cv2.INTER_AREA)
+    else:
+        face_image = frame[top:bottom, left:right]
+        blurred_face = cv2.GaussianBlur(face_image, (0, 0), 30)
+    frame[top:bottom, left:right] = blurred_face
+    return frame
+
+
 @click.command()
 @click.option('--mode', default='all', type=click.Choice(['all', 'one', 'allexcept'], case_sensitive=False))
 @click.option('--model', default='hog', type=click.Choice(['hog', 'cnn'], case_sensitive=False))
@@ -73,10 +89,7 @@ def blurfaces(mode, model, censor_type, count, in_video_file):
                 results = face_recognition.compare_faces(face_image_encodings, ross1_enc)
                 for found, face_location in zip(results, face_locations):
                     if found:
-                        top, right, bottom, left = face_location
-                        # face_image = frame[top:bottom, left:right]
-                        blurred_face = np.zeros((bottom-top, right-left, 3))
-                        frame[top:bottom, left:right] = blurred_face
+                        frame = get_blurred_face(frame, censor_type, face_location)
                 video_out.write(frame)
         else:
             exit('mode not supported.')
