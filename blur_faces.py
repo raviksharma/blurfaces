@@ -98,7 +98,16 @@ def blurfaces(mode, model, censor_type, count, in_face_file, in_video_file):
         elif mode == 'allexcept':
             exit('mode not supported.')
         else:
-            exit('mode not supported.')
+            for i in trange(length+1):
+                ret, frame = video_capture.read()
+                if not ret:
+                    video_out.release()
+                    break
+
+                face_locations = face_recognition.face_locations(frame, number_of_times_to_upsample=count, model=model)
+                for face_location in face_locations:
+                    frame = get_blurred_face(frame, censor_type, face_location)
+                video_out.write(frame)
 
         video_capture.release()
         cv2.destroyAllWindows()
