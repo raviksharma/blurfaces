@@ -10,6 +10,11 @@ __pycache__/
 *.mp4
 *.jpg
 
+# media exceptions
+media/*
+!media/Ross_Geller.jpg
+!media/friends.mp4
+
 # Distribution / packaging
 .Python
 build/
