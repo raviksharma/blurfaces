@@ -30,6 +30,18 @@ def get_video_properties(video_capture):
     return width, height, length, fps, fourcc, codec
 
 
+def get_face_encoding(in_face_file):
+    try:
+        face_to_blur = face_recognition.load_image_file(in_face_file)
+        # expecting only 1 face in the image
+        face_to_blur_enc = face_recognition.face_encodings(face_to_blur)[0]
+        return face_to_blur_enc
+    except FileNotFoundError:
+        exit(f'file not found {in_face_file=}.')
+    except IndexError:
+        exit(f'no face found in the image file {in_face_file=}.')
+
+
 def get_blurred_face(frame, censor_type, face_location):
     top, right, bottom, left = face_location
     if censor_type == 'facemasking':
@@ -72,14 +84,7 @@ def blurfaces(mode, model, censor_type, count, in_face_file, in_video_file):
 
         face_locations = []
         if mode == 'one':
-            try:
-                face_to_blur = face_recognition.load_image_file(in_face_file)
-                # expecting only 1 face in the image
-                face_to_blur_enc = face_recognition.face_encodings(face_to_blur)[0]
-            except FileNotFoundError:
-                exit(f'file not found {in_face_file=}.')
-            except IndexError:
-                exit(f'no face found in the image file {in_face_file=}.')
+            face_to_blur_enc = get_face_encoding(in_face_file)
 
             for i in trange(length+1):
                 ret, frame = video_capture.read()
@@ -96,8 +101,22 @@ def blurfaces(mode, model, censor_type, count, in_face_file, in_video_file):
                 video_out.write(frame)
 
         elif mode == 'allexcept':
-            exit('mode not supported.')
-        else:
+            face_to_blur_enc = get_face_encoding(in_face_file)
+
+            for i in trange(length+1):
+                ret, frame = video_capture.read()
+                if not ret:
+                    video_out.release()
+                    break
+
+                face_locations = face_recognition.face_locations(frame, number_of_times_to_upsample=count, model=model)
+                face_image_encodings = face_recognition.face_encodings(frame, face_locations)
+                results = face_recognition.compare_faces(face_image_encodings, face_to_blur_enc)
+                for found, face_location in zip(results, face_locations):
+                    if not found:
+                        frame = get_blurred_face(frame, censor_type, face_location)
+                video_out.write(frame)
+        else:  # mode = all
             for i in trange(length+1):
                 ret, frame = video_capture.read()
                 if not ret:
