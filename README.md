@@ -4,12 +4,26 @@
 
 Blurs faces in video.
 
-sample | mode=all, censor-type=gaussianblur
-:-: | :-:
-<video src='https://user-images.githubusercontent.com/600723/212699288-73a89730-a92b-4136-a340-0e8739fc832d.mp4'/>|<video src='https://user-images.githubusercontent.com/600723/212761619-ddd63219-f4b1-4b7d-b890-1d66ae190fb0.mp4'/>
-mode=one, censor-type=pixelation | mode=allexcept, censor-type=facemasking
-<video src='https://user-images.githubusercontent.com/600723/221906178-4ba56e9e-b143-4f10-9da1-0e9aada87abe.mp4'/>|<video src='https://user-images.githubusercontent.com/600723/221908350-1d4a7f09-765d-45b0-8293-b1ed3be2a209.mp4'/>
-
+<table>
+<tbody>
+<tr>
+<td>sample</td>
+<td>mode=all, censor-type=gaussianblur</td>
+</tr>
+<tr>
+<td><video src='https://user-images.githubusercontent.com/600723/212699288-73a89730-a92b-4136-a340-0e8739fc832d.mp4'/></td>
+<td><video src='https://user-images.githubusercontent.com/600723/212761619-ddd63219-f4b1-4b7d-b890-1d66ae190fb0.mp4'/></td>
+</tr>
+<tr>
+<td>mode=one, censor-type=pixelation</td>
+<td>mode=allexcept, censor-type=facemasking</td>
+</tr>
+<tr>
+<td><video src='https://user-images.githubusercontent.com/600723/221906178-4ba56e9e-b143-4f10-9da1-0e9aada87abe.mp4'/></td>
+<td><video src='https://user-images.githubusercontent.com/600723/221908350-1d4a7f09-765d-45b0-8293-b1ed3be2a209.mp4'/></td>
+</tr>
+</tbody>
+</table>
 
 ## Installation
 1. Make sure you have Python version 3.10.6 or greater installed
