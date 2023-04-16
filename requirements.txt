@@ -10,7 +10,7 @@ face-recognition-models==0.3.0
 ffmpeg-python==0.2.0
 flake8==5.0.4
 future==0.18.2
-ipython==8.5.0
+ipython==8.10.0
 jedi==0.18.1
 matplotlib-inline==0.1.6
 mccabe==0.7.0
