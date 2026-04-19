@@ -9,7 +9,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 COPY --from=ghcr.io/astral-sh/uv:latest /uv /usr/local/bin/uv
 
 WORKDIR /app
-COPY pyproject.toml .python-version README.md blurfaces.py ./
+COPY pyproject.toml README.md blurfaces.py ./
 
 RUN uv sync --no-dev
 
