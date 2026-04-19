@@ -6,11 +6,11 @@ Detect and censor faces in video using insightface and ffmpeg.
 
 | Input | Blackout (default) |
 |-------|----------------|
-| <video src="https://user-images.githubusercontent.com/600723/212699288-73a89730-a92b-4136-a340-0e8739fc832d.mp4" /> | <video src="https://github.com/user-attachments/assets/4b08deff-0247-4904-b273-f5b98b2d53a7" /> |
+| <video src="https://user-images.githubusercontent.com/600723/212699288-73a89730-a92b-4136-a340-0e8739fc832d.mp4" /> | <video src="https://github.com/user-attachments/assets/77640f04-f4f0-48c4-836b-c39de4bf28b2" /> |
 
 | Blur | Pixel |
 |----------|-------|
-| <video src="https://github.com/user-attachments/assets/35f03c27-d9cc-45cc-a19a-45cc31d78809" /> | <video src="https://github.com/user-attachments/assets/77640f04-f4f0-48c4-836b-c39de4bf28b2" /> |
+| <video src="https://github.com/user-attachments/assets/35f03c27-d9cc-45cc-a19a-45cc31d78809" /> | <video src="https://github.com/user-attachments/assets/4b08deff-0247-4904-b273-f5b98b2d53a7" /> |
 
 ## Features
 
@@ -56,6 +56,15 @@ uv run blurfaces video.mp4 -o censored.mp4
 ```
 
 ## Docker
+
+### Pre-built image (GHCR)
+
+```bash
+docker pull ghcr.io/raviksharma/blurfaces:latest
+docker run --rm -v $(pwd)/media:/data ghcr.io/raviksharma/blurfaces /data/video.mp4 -o /data/out.mp4
+```
+
+### Build locally
 
 ```bash
 docker build -t blurfaces .
