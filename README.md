@@ -1,6 +1,6 @@
 # blurfaces
 
-Detect and censor faces in video using [insightface](https://github.com/deepinsight/insightface) and ffmpeg.
+Detect and censor faces in video using insightface and ffmpeg.
 
 ## Samples
 
@@ -28,7 +28,7 @@ Detect and censor faces in video using [insightface](https://github.com/deepinsi
 
 ## Installation
 
-Requires Python 3.12+, [uv](https://docs.astral.sh/uv/), and ffmpeg.
+Requires Python 3.12+, uv, and ffmpeg.
 
 ```bash
 git clone git@github.com:raviksharma/blurfaces.git
@@ -73,9 +73,9 @@ docker run --rm -v $(pwd)/media:/data blurfaces /data/video.mp4 -o /data/out.mp4
 | Option | Default | Description |
 |--------|---------|-------------|
 | `--mode` | `all` | `all`, `target`, or `exclude` |
-| `--blur` | `blur` | `blur`, `blackout`, `pixel`, or `bar` |
-| `--face` | — | Reference face image (required for `target`/`exclude`) |
-| `--model` | `buffalo_l` | `buffalo_l` (accurate), `buffalo_s` (balanced), `buffalo_sc` (fast) |
+| `--blur` | `blackout` | `blur`, `blackout`, `pixel`, or `bar` |
+| `--face` | NA | Reference face image (required for `target`/`exclude`) |
+| `--model` | `buffalo_sc` | `buffalo_l` (accurate), `buffalo_s` (balanced), `buffalo_sc` (fast) |
 | `--det-size` | `640` | Detection resolution in pixels |
 | `--threshold` | `0.45` | Cosine similarity threshold for face matching |
 | `-o` | `out.<ext>` | Output file path |

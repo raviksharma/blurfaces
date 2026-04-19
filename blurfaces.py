@@ -111,16 +111,16 @@ def apply_censor(frame, bbox, method):
 @click.argument("video", type=click.Path(exists=True))
 @click.option("--mode", default="all", type=click.Choice(["all", "target", "exclude"], case_sensitive=False),
               help="Who to censor: 'all' every face, 'target' only the --face person, 'exclude' everyone but --face.")
-@click.option("--blur", "blur_method", default="blur", type=click.Choice(["blur", "blackout", "pixel", "bar"], case_sensitive=False),
+@click.option("--blur", "blur_method", default="blackout", type=click.Choice(["blur", "blackout", "pixel", "bar"], case_sensitive=False),
               help="How to censor: 'blur' smooth blur, 'blackout' solid black, 'pixel' blocky mosaic, 'bar' black bar across the eyes.")
 @click.option("--face", "face_file", type=click.Path(exists=True), default=None,
               help="Photo of the target face. Required when --mode is 'target' or 'exclude'.")
-@click.option("--model", default="buffalo_l", type=click.Choice(["buffalo_l", "buffalo_s", "buffalo_sc"], case_sensitive=False),
+@click.option("--model", default="buffalo_sc", type=click.Choice(["buffalo_l", "buffalo_s", "buffalo_sc"], case_sensitive=False),
               help="Accuracy vs speed: 'buffalo_l' most accurate, 'buffalo_s' balanced, 'buffalo_sc' fastest.")
 @click.option("--det-size", default=640, type=int,
               help="Face detection resolution in px. Try 320 for speed, 960 for small/distant faces.")
 @click.option("--threshold", default=0.45, type=float,
-              help="How strict face matching is (0-1). Lower = stricter. Only used with --mode target/exclude.")
+              help="How strict face matching is (0-1). Higher = stricter. Only used with --mode target/exclude.")
 @click.option("-o", "--output", "output_path", default=None,
               help="Where to save the result. Defaults to 'out.<ext>' in the current directory.")
 def cli(video, mode, blur_method, face_file, model, det_size, threshold, output_path):
