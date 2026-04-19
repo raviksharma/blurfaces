@@ -4,19 +4,13 @@ Detect and censor faces in video using insightface and ffmpeg.
 
 ## Samples
 
-| Input | Blur (default) |
+| Input | Blackout (default) |
 |-------|----------------|
-| <video src="media/TODO_input.mp4" /> | <video src="media/TODO_blur.mp4" /> |
+| <video src="https://user-images.githubusercontent.com/600723/212699288-73a89730-a92b-4136-a340-0e8739fc832d.mp4" /> | <video src="https://github.com/user-attachments/assets/4b08deff-0247-4904-b273-f5b98b2d53a7" /> |
 
-| Blackout | Pixel |
+| Blur | Pixel |
 |----------|-------|
-| <video src="media/TODO_blackout.mp4" /> | <video src="media/TODO_pixel.mp4" /> |
-
-| Bar | Target (one face) |
-|-----|-------------------|
-| <video src="media/TODO_bar.mp4" /> | <video src="media/TODO_target.mp4" /> |
-
-<!-- Replace the TODO filenames above with actual sample videos -->
+| <video src="https://github.com/user-attachments/assets/35f03c27-d9cc-45cc-a19a-45cc31d78809" /> | <video src="https://github.com/user-attachments/assets/77640f04-f4f0-48c4-836b-c39de4bf28b2" /> |
 
 ## Features
 
