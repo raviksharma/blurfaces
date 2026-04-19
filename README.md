@@ -1,72 +1,89 @@
 # blurfaces
 
-## Tool Description
+Detect and censor faces in video using [insightface](https://github.com/deepinsight/insightface) and ffmpeg.
 
-Blurs faces in video.
+## Samples
 
-<table>
-<tbody>
-<tr>
-<td>sample</td>
-<td>mode=<b>all</b>, censor-type=<b>gaussianblur</b></td>
-</tr>
-<tr>
-<td><video src='https://user-images.githubusercontent.com/600723/212699288-73a89730-a92b-4136-a340-0e8739fc832d.mp4'/></td>
-<td><video src='https://user-images.githubusercontent.com/600723/212761619-ddd63219-f4b1-4b7d-b890-1d66ae190fb0.mp4'/></td>
-</tr>
-<tr>
-<td>mode=<b>one</b>, censor-type=<b>pixelation</b></td>
-<td>mode=<b>allexcept</b>, censor-type=<b>facemasking</b></td>
-</tr>
-<tr>
-<td><video src='https://user-images.githubusercontent.com/600723/221906178-4ba56e9e-b143-4f10-9da1-0e9aada87abe.mp4'/></td>
-<td><video src='https://user-images.githubusercontent.com/600723/221908350-1d4a7f09-765d-45b0-8293-b1ed3be2a209.mp4'/></td>
-</tr>
-</tbody>
-</table>
+| Input | Blur (default) |
+|-------|----------------|
+| <video src="media/TODO_input.mp4" /> | <video src="media/TODO_blur.mp4" /> |
+
+| Blackout | Pixel |
+|----------|-------|
+| <video src="media/TODO_blackout.mp4" /> | <video src="media/TODO_pixel.mp4" /> |
+
+| Bar | Target (one face) |
+|-----|-------------------|
+| <video src="media/TODO_bar.mp4" /> | <video src="media/TODO_target.mp4" /> |
+
+<!-- Replace the TODO filenames above with actual sample videos -->
+
+## Features
+
+- **Three modes** — blur all faces, just one specific face, or everyone *except* one face
+- **Four blur styles** — blur, blackout, pixelation, or eye bar
+- **Speed / accuracy tradeoff** — choose model pack (`buffalo_l` → `buffalo_sc`) and detection resolution
+- **GPU support** — uses ONNX Runtime; swap in `onnxruntime-gpu` for CUDA acceleration
+- **Audio preserved** — audio is muxed back into the output automatically
 
 ## Installation
-1. Make sure you have Python version 3.10.6 or greater installed
 
-2. Download the tool's repository using the command:
+Requires Python 3.12+, [uv](https://docs.astral.sh/uv/), and ffmpeg.
 
-        git clone git@github.com:raviksharma/blurfaces.git
+```bash
+git clone git@github.com:raviksharma/blurfaces.git
+cd blurfaces
+uv sync
+```
 
-3. Move to the tool's directory and install the tool
+For GPU support:
 
-        cd blurfaces
-        pip install -r requirements.txt
+```bash
+uv sync --extra gpu
+```
 
 ## Usage
 
-```
-$ python3 blur_faces.py --help
-Usage: blur_faces.py [OPTIONS] IN_VIDEO_FILE
+```bash
+# Blur all faces
+uv run blurfaces video.mp4
 
-Options:
-  --mode [all|one|allexcept]
-  --model [hog|cnn]
-  --censor-type [gaussianblur|facemasking|pixelation]
-  --count INTEGER                 How many times to upsample the image looking
-                                  for faces. Higher numbers find smaller
-                                  faces.
+# Blur one specific person with pixelation
+uv run blurfaces video.mp4 --mode target --face person.jpg --blur pixel
 
-  --in-face-file TEXT
-  --help                          Show this message and exit.
+# Blur everyone except one person
+uv run blurfaces video.mp4 --mode exclude --face person.jpg --blur blackout
+
+# Faster processing (smaller model + lower detection resolution)
+uv run blurfaces video.mp4 --model buffalo_sc --det-size 320
+
+# Custom output path
+uv run blurfaces video.mp4 -o censored.mp4
 ```
 
-Example
+## Docker
+
+```bash
+docker build -t blurfaces .
+docker run --rm -v $(pwd)/media:/data blurfaces /data/video.mp4 -o /data/out.mp4
 ```
-python3 blur_faces.py media/friends.mp4 --mode allexcept --model cnn --censor-type facemasking --in-face-file media/Ross_Geller.jpg
-```
+
+## Options
+
+| Option | Default | Description |
+|--------|---------|-------------|
+| `--mode` | `all` | `all`, `target`, or `exclude` |
+| `--blur` | `blur` | `blur`, `blackout`, `pixel`, or `bar` |
+| `--face` | — | Reference face image (required for `target`/`exclude`) |
+| `--model` | `buffalo_l` | `buffalo_l` (accurate), `buffalo_s` (balanced), `buffalo_sc` (fast) |
+| `--det-size` | `640` | Detection resolution in pixels |
+| `--threshold` | `0.45` | Cosine similarity threshold for face matching |
+| `-o` | `out.<ext>` | Output file path |
 
 ## Additional Information
 
 - originally developed for [Bellingcat Oct 2022 Hackathon](https://www.bellingcat.com/resources/2022/10/06/automated-map-searches-scam-busting-tools-and-twitter-search-translations-here-are-the-results-of-bellingcats-second-hackathon/)
-- uses [face_recognition](https://github.com/ageitgey/face_recognition) for face detection
-- uses [ffmpeg](https://ffmpeg.org/) for audio and video processing
 - tool is not perfect; should be used with other manual editing before final publish
 - next steps
-   - smooth face_locations (fixes failure in detecting odd frames)
-   - detect scene change and use it to reset face_locations[]
-   - choose num_jitters
+   - smooth face locations (fixes failure in detecting odd frames)
+   - detect scene change and use it to reset face locations
